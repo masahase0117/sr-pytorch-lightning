@@ -25,7 +25,6 @@ def main():
     model = Model.load_from_metrics(
         weights_path=opt.ckpt,
         tags_csv=Path(opt.ckpt).parent.parent / "meta_tags.csv",
-        on_gpu=True,
         map_location=None,
     )
     model.eval()

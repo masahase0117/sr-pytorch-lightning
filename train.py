@@ -2,7 +2,7 @@ import argparse
 import warnings
 
 from pytorch_lightning.callbacks import ModelCheckpoint
-from pytorch_lightning.models.trainer import Trainer
+from pytorch_lightning.trainer import Trainer
 from test_tube import Experiment
 
 import models
