@@ -1,10 +1,9 @@
 from pathlib import Path
 
+import pytorch_lightning as pl
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
 from torch.utils.data.dataloader import DataLoader
-import pytorch_lightning as pl
 
 from .datasets import DatasetFromFolder
 from .networks import SRCNN

@@ -1,8 +1,8 @@
-from pathlib import Path
 import functools
+from pathlib import Path
 
 from PIL import Image
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 from torchvision import transforms
 from torchvision.transforms import functional as TF
 

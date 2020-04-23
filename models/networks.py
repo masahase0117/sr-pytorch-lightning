@@ -5,8 +5,9 @@ from torch import nn
 
 
 class SRCNN(nn.Sequential):
-    """
-    PyTorch Module for SRCNN, https://arxiv.org/pdf/1501.00092.pdf.
+    """PyTorch Module for SRCNN
+
+    https://arxiv.org/pdf/1501.00092.pdf.
     """
 
     def __init__(self):
@@ -20,8 +21,9 @@ class SRCNN(nn.Sequential):
 
 
 class SRResNet(nn.Module):
-    """
-    PyTorch Module for SRGAN, https://arxiv.org/pdf/1609.04802.
+    """PyTorch Module for SRGAN
+
+    https://arxiv.org/pdf/1609.04802.
     """
 
     def __init__(self, scale_factor=4, ngf=64, n_blocks=16):
@@ -53,8 +55,9 @@ class SRResNet(nn.Module):
 
 
 class EDSR(nn.Module):
-    """
-    PyTorch Module for EDSR, https://arxiv.org/pdf/1707.02921.
+    """PyTorch Module for EDSR
+
+    https://arxiv.org/pdf/1707.02921.
     """
 
     def __init__(self, scale_factor=4, ngf=256, n_blocks=32, res_scale=0.1):
@@ -104,9 +107,7 @@ class EDSR(nn.Module):
 # Building Blocks
 #################
 class SRGANBlock(nn.Module):
-    """
-    Building block of SRGAN.
-    """
+    """Building block of SRGAN."""
 
     def __init__(self, dim):
         super(SRGANBlock, self).__init__()
@@ -125,9 +126,7 @@ class SRGANBlock(nn.Module):
 
 
 class EDSRBlock(nn.Module):
-    """
-    Building block of EDSR.
-    """
+    """Building block of EDSR."""
 
     def __init__(self, dim, res_scale=0.1):
         super(EDSRBlock, self).__init__()
@@ -145,8 +144,8 @@ class EDSRBlock(nn.Module):
 
 
 class UpscaleBlock(nn.Sequential):
-    """
-    Upscale block using sub-pixel convolutions.
+    """Upscale block using sub-pixel convolutions.
+
     `scale_factor` can be selected from {2, 3, 4, 8}.
     """
 
@@ -171,8 +170,8 @@ class UpscaleBlock(nn.Sequential):
 
 
 class Discriminator(nn.Sequential):
-    """
-    Discriminator for SRGAN.
+    """Discriminator for SRGAN.
+
     Dense layers are replaced with global poolings and 1x1 convolutions.
     """
 

@@ -1,25 +1,31 @@
 import argparse
 from collections import OrderedDict
-from math import sqrt, ceil
+from math import ceil
+from math import sqrt
 
+from kornia.color import rgb_to_grayscale
+from kornia.losses import SSIM
+import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data.dataloader import DataLoader
 from torchvision.utils import make_grid
-import pytorch_lightning as pl
-from kornia.losses import SSIM
-from kornia.color import rgb_to_grayscale
 
 from .datasets import DatasetFromFolder
-from .networks import SRResNet, Discriminator
-from .losses import GANLoss, TVLoss, VGGLoss, PSNR
+from .losses import GANLoss
+from .losses import PSNR
+from .losses import TVLoss
+from .losses import VGGLoss
+from .networks import Discriminator
+from .networks import SRResNet
 
 
 class SRGANModel(pl.LightningModule):
-    """
-    LightningModule for SRGAN, https://arxiv.org/pdf/1609.04802.
+    """LightningModule for SRGAN
+
+    https://arxiv.org/pdf/1609.04802.
     """
 
     @staticmethod

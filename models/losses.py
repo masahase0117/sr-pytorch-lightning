@@ -8,9 +8,10 @@ import torchvision.models.vgg as vgg
 
 
 class GANLoss(nn.Module):
-    """
-    PyTorch module for GAN loss.
-    This code is inspired by https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.
+    """PyTorch module for GAN loss.
+
+    This code is inspired by
+     https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.
     """
 
     def __init__(
@@ -54,8 +55,7 @@ class GANLoss(nn.Module):
 
 
 class VGGLoss(nn.Module):
-    """
-    PyTorch module for VGG loss.
+    """PyTorch module for VGG loss.
 
     Parameter
     ---------
@@ -107,7 +107,8 @@ class VGGLoss(nn.Module):
         return img
 
     def forward(self, x, y):
-        """
+        """順方向
+
         Paramenters
         ---
         x, y : torch.Tensor
@@ -127,10 +128,10 @@ class VGGLoss(nn.Module):
 
 
 class VGG16(nn.Module):
-    """
-    Blockwise pickable VGG16.
+    """Blockwise pickable VGG16.
 
-    This code is inspired by https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426 
+    This code is inspired by
+     https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426
     """
 
     def __init__(self, requires_grad=False):
@@ -171,10 +172,10 @@ class VGG16(nn.Module):
 
 
 class VGG19(nn.Module):
-    """
-    Blockwise pickable VGG19.
+    """Blockwise pickable VGG19.
 
-    This code is inspired by https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426
+    This code is inspired by
+     https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426
     """
 
     def __init__(self, requires_grad=False):
@@ -223,10 +224,10 @@ class VGG19(nn.Module):
 
 
 class TVLoss(nn.Module):
-    """
-    Total Variation Loss.
+    """Total Variation Loss.
 
-    This code is copied from https://github.com/leftthomas/SRGAN/blob/master/loss.py
+    This code is copied from
+     https://github.com/leftthomas/SRGAN/blob/master/loss.py
     """
 
     def __init__(self, tv_loss_weight=1):
@@ -254,9 +255,7 @@ class TVLoss(nn.Module):
 
 
 class PSNR(nn.Module):
-    """
-    Peak Signal/Noise Ratio.
-    """
+    """Peak Signal/Noise Ratio."""
 
     def __init__(self, max_val=1.0):
         super(PSNR, self).__init__()
