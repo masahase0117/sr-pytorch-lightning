@@ -21,17 +21,17 @@ class SRCNNModel(pl.LightningModule):
     def forward(self, input):
         return self.net(input)
 
-    def training_step(self, batch,  batch_nb):
-        img_lr = batch['lr']
-        img_hr = batch['hr']
+    def training_step(self, batch, batch_nb):
+        img_lr = batch["lr"]
+        img_hr = batch["hr"]
         img_sr = self.forward(img_lr)
-        return {'loss': self.criterion(img_sr, img_hr)}
+        return {"loss": self.criterion(img_sr, img_hr)}
 
     def validation_step(self, batch, batch_nb):
-        img_lr = batch['lr']
-        img_hr = batch['hr']
+        img_lr = batch["lr"]
+        img_hr = batch["hr"]
         img_sr = self.forward(img_lr)
-        return {'val_loss': self.criterion(img_sr, img_hr)}
+        return {"val_loss": self.criterion(img_sr, img_hr)}
 
     def configure_optimizers(self):
         return [optim.Adam(self.parameters(), lr=1e-4)]
@@ -39,29 +39,29 @@ class SRCNNModel(pl.LightningModule):
     @pl.data_loader
     def tng_dataloader(self):
         dataset = DatasetFromFolder(
-            data_dir=self.dataroot / 'train',
+            data_dir=self.dataroot / "train",
             scale_factor=4,
             patch_size=96,
-            preupsample=True
+            preupsample=True,
         )
         return DataLoader(dataset, batch_size=16)
 
     @pl.data_loader
     def val_dataloader(self):
         dataset = DatasetFromFolder(
-            data_dir=self.dataroot / 'val',
+            data_dir=self.dataroot / "val",
             scale_factor=4,
-            mode='eval',
-            preupsample=True
+            mode="eval",
+            preupsample=True,
         )
         return DataLoader(dataset, batch_size=1)
 
     @pl.data_loader
     def test_dataloader(self):
         dataset = DatasetFromFolder(
-            data_dir=self.dataroot / 'test',
+            data_dir=self.dataroot / "test",
             scale_factor=4,
-            mode='eval',
-            preupsample=True
+            mode="eval",
+            preupsample=True,
         )
         return DataLoader(dataset, batch_size=1)

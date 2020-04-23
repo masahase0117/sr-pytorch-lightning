@@ -12,25 +12,27 @@ class GANLoss(nn.Module):
     PyTorch module for GAN loss.
     This code is inspired by https://github.com/junyanz/pytorch-CycleGAN-and-pix2pix.
     """
-    def __init__(self,
-                 gan_mode='wgangp',
-                 target_real_label=1.0,
-                 target_fake_label=0.0):
+
+    def __init__(
+        self, gan_mode="wgangp", target_real_label=1.0, target_fake_label=0.0
+    ):
 
         super(GANLoss, self).__init__()
 
-        self.register_buffer('real_label', torch.tensor(target_real_label))
-        self.register_buffer('fake_label', torch.tensor(target_fake_label))
+        self.register_buffer("real_label", torch.tensor(target_real_label))
+        self.register_buffer("fake_label", torch.tensor(target_fake_label))
 
         self.gan_mode = gan_mode
-        if gan_mode == 'lsgan':
+        if gan_mode == "lsgan":
             self.loss = nn.MSELoss()
-        elif gan_mode == 'vanilla':
+        elif gan_mode == "vanilla":
             self.loss = nn.BCEWithLogitsLoss()
-        elif gan_mode in ['wgangp']:
+        elif gan_mode in ["wgangp"]:
             self.loss = None
         else:
-            raise NotImplementedError('gan mode %s not implemented' % gan_mode)
+            raise NotImplementedError(
+                "gan mode %s not implemented" % gan_mode
+            )
 
     def get_target_tensor(self, prediction, target_is_real):
         if target_is_real:
@@ -40,12 +42,12 @@ class GANLoss(nn.Module):
         return target_tensor.expand_as(prediction).detach()
 
     def forward(self, prediction, target_is_real):
-        if self.gan_mode in ['lsgan', 'vanilla']:
+        if self.gan_mode in ["lsgan", "vanilla"]:
             target_tensor = self.get_target_tensor(prediction, target_is_real)
             loss = self.loss(prediction, target_tensor)
-        elif self.gan_mode == 'wgangp':
+        elif self.gan_mode == "wgangp":
             if target_is_real:
-                loss = - prediction.mean()
+                loss = -prediction.mean()
             else:
                 loss = prediction.mean()
         return loss
@@ -64,32 +66,39 @@ class VGGLoss(nn.Module):
     rescale : float
         rescale factor for VGG Loss
     """
-    def __init__(self, net_type='vgg19', layer='relu2_2', rescale=0.006):
+
+    def __init__(self, net_type="vgg19", layer="relu2_2", rescale=0.006):
         super(VGGLoss, self).__init__()
 
-        if net_type == 'vgg16':
-            assert layer in ['relu1_2', 'relu2_2', 'relu3_3', 'relu4_3']
+        if net_type == "vgg16":
+            assert layer in ["relu1_2", "relu2_2", "relu3_3", "relu4_3"]
             self.__vgg_net = VGG16()
             self.__layer = layer
-        elif net_type == 'vgg19':
-            assert layer in ['relu1_2', 'relu2_2', 'relu3_4',
-                             'relu4_4', 'relu5_4']
+        elif net_type == "vgg19":
+            assert layer in [
+                "relu1_2",
+                "relu2_2",
+                "relu3_4",
+                "relu4_4",
+                "relu5_4",
+            ]
             self.__vgg_net = VGG19()
             self.__layer = layer
 
         self.register_buffer(
-            name='vgg_mean',
-            tensor=torch.tensor([[[0.485]], [[0.456]], [[0.406]]],
-                                requires_grad=False)
+            name="vgg_mean",
+            tensor=torch.tensor(
+                [[[0.485]], [[0.456]], [[0.406]]], requires_grad=False
+            ),
         )
         self.register_buffer(
-            name='vgg_std',
-            tensor=torch.tensor([[[0.229]], [[0.224]], [[0.225]]],
-                                requires_grad=False)
+            name="vgg_std",
+            tensor=torch.tensor(
+                [[[0.229]], [[0.224]], [[0.225]]], requires_grad=False
+            ),
         )
-        self.register_buffer(   # to balance VGG loss with other losses.
-            name='rescale',
-            tensor=torch.tensor(rescale, requires_grad=False)
+        self.register_buffer(  # to balance VGG loss with other losses.
+            name="rescale", tensor=torch.tensor(rescale, requires_grad=False)
         )
 
     def __normalize(self, img):
@@ -123,6 +132,7 @@ class VGG16(nn.Module):
 
     This code is inspired by https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426 
     """
+
     def __init__(self, requires_grad=False):
         super(VGG16, self).__init__()
         vgg_pretrained_features = vgg.vgg16(pretrained=True).features
@@ -153,7 +163,8 @@ class VGG16(nn.Module):
         h_relu4_3 = h
 
         vgg_outputs = namedtuple(
-            "VggOutputs", ['relu1_2', 'relu2_2', 'relu3_3', 'relu4_3'])
+            "VggOutputs", ["relu1_2", "relu2_2", "relu3_3", "relu4_3"]
+        )
         out = vgg_outputs(h_relu1_2, h_relu2_2, h_relu3_3, h_relu4_3)
 
         return out
@@ -165,6 +176,7 @@ class VGG19(nn.Module):
 
     This code is inspired by https://gist.github.com/crcrpar/a5d46738ffff08fc12138a5f270db426
     """
+
     def __init__(self, requires_grad=False):
         super(VGG19, self).__init__()
         vgg_pretrained_features = vgg.vgg19(pretrained=True).features
@@ -200,10 +212,12 @@ class VGG19(nn.Module):
         h_relu5_4 = h
 
         vgg_outputs = namedtuple(
-            "VggOutputs", ['relu1_2', 'relu2_2',
-                           'relu3_4', 'relu4_4', 'relu5_4'])
-        out = vgg_outputs(h_relu1_2, h_relu2_2,
-                          h_relu3_4, h_relu4_4, h_relu5_4)
+            "VggOutputs",
+            ["relu1_2", "relu2_2", "relu3_4", "relu4_4", "relu5_4"],
+        )
+        out = vgg_outputs(
+            h_relu1_2, h_relu2_2, h_relu3_4, h_relu4_4, h_relu5_4
+        )
 
         return out
 
@@ -214,6 +228,7 @@ class TVLoss(nn.Module):
 
     This code is copied from https://github.com/leftthomas/SRGAN/blob/master/loss.py
     """
+
     def __init__(self, tv_loss_weight=1):
         super(TVLoss, self).__init__()
         self.tv_loss_weight = tv_loss_weight
@@ -224,9 +239,14 @@ class TVLoss(nn.Module):
         w_x = x.size()[3]
         count_h = self.tensor_size(x[:, :, 1:, :])
         count_w = self.tensor_size(x[:, :, :, 1:])
-        h_tv = torch.pow((x[:, :, 1:, :] - x[:, :, :h_x - 1, :]), 2).sum()
-        w_tv = torch.pow((x[:, :, :, 1:] - x[:, :, :, :w_x - 1]), 2).sum()
-        return self.tv_loss_weight * 2 * (h_tv / count_h + w_tv / count_w) / batch_size
+        h_tv = torch.pow((x[:, :, 1:, :] - x[:, :, : h_x - 1, :]), 2).sum()
+        w_tv = torch.pow((x[:, :, :, 1:] - x[:, :, :, : w_x - 1]), 2).sum()
+        return (
+            self.tv_loss_weight
+            * 2
+            * (h_tv / count_h + w_tv / count_w)
+            / batch_size
+        )
 
     @staticmethod
     def tensor_size(t):
@@ -237,7 +257,8 @@ class PSNR(nn.Module):
     """
     Peak Signal/Noise Ratio.
     """
-    def __init__(self, max_val=1.):
+
+    def __init__(self, max_val=1.0):
         super(PSNR, self).__init__()
         self.max_val = max_val
 

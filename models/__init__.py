@@ -3,7 +3,7 @@ from .srgan_model import SRGANModel
 
 
 __all__ = [
-    'losses',
-    'SRCNNModel',
-    'SRGANModel',
+    "losses",
+    "SRCNNModel",
+    "SRGANModel",
 ]

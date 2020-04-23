@@ -7,22 +7,22 @@ from test_tube import Experiment
 
 import models
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', choices=['srcnn', 'srgan'], required=True)
-    parser.add_argument('--scale_factor', type=int, default=4)
-    parser.add_argument('--batch_size', type=int, default=16)
-    parser.add_argument('--patch_size', type=int, default=96)
-    parser.add_argument('--gpus', type=str, default='0')
+    parser.add_argument("--model", choices=["srcnn", "srgan"], required=True)
+    parser.add_argument("--scale_factor", type=int, default=4)
+    parser.add_argument("--batch_size", type=int, default=16)
+    parser.add_argument("--patch_size", type=int, default=96)
+    parser.add_argument("--gpus", type=str, default="0")
     opt = parser.parse_args()
 
     # load model class
-    if opt.model == 'srcnn':
+    if opt.model == "srcnn":
         Model = models.SRCNNModel
-    elif opt.model == 'srgan':
+    elif opt.model == "srgan":
         Model = models.SRGANModel
 
     # add model specific arguments to original parser
@@ -30,7 +30,7 @@ def main():
     opt = parser.parse_args()
 
     # instantiate experiment
-    exp = Experiment(save_dir=f'./logs/{opt.model}')
+    exp = Experiment(save_dir=f"./logs/{opt.model}")
     exp.argparse(opt)
 
     model = Model(opt)
@@ -47,7 +47,7 @@ def main():
         add_log_row_interval=50,
         check_val_every_n_epoch=10,
         checkpoint_callback=checkpoint_callback,
-        gpus=[int(i) for i in opt.gpus.split(',')]
+        gpus=[int(i) for i in opt.gpus.split(",")],
     )
 
     # start training!
