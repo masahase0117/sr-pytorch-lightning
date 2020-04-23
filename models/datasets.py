@@ -88,7 +88,9 @@ class DatasetFromFolder(Dataset):
         filename = self.filenames[index]
         img = Image.open(filename).convert("RGB")
         img_hr = self.transforms(img)
-        down_size = [l // self.scale_factor for l in img_hr.size[::-1]]
+        down_size = [
+            length // self.scale_factor for length in img_hr.size[::-1]
+        ]
         img_lr = TF.resize(img_hr, down_size, interpolation=Image.BICUBIC)
         if self.preupsample:
             img_lr = TF.resize(

@@ -139,8 +139,8 @@ class SRGANModel(pl.LightningModule):
         return {"psnr": psnr, "ssim": ssim}
 
     def validation_end(self, outputs):
-        val_psnr_mean = 0
-        val_ssim_mean = 0
+        val_psnr_mean = torch.tensor(0, dtype=torch.float)
+        val_ssim_mean = torch.tensor(0, dtype=torch.float)
         for output in outputs:
             val_psnr_mean += output["psnr"]
             val_ssim_mean += output["ssim"]
@@ -154,8 +154,8 @@ class SRGANModel(pl.LightningModule):
     def configure_optimizers(self):
         optimizer_G = optim.Adam(self.net_G.parameters(), lr=1e-4)
         optimizer_D = optim.Adam(self.net_D.parameters(), lr=1e-4)
-        scheduler_G = StepLR(optimizer_G, step_size=1e5, gamma=0.1)
-        scheduler_D = StepLR(optimizer_D, step_size=1e5, gamma=0.1)
+        scheduler_G = StepLR(optimizer_G, step_size=100000, gamma=0.1)
+        scheduler_D = StepLR(optimizer_D, step_size=100000, gamma=0.1)
         return [optimizer_D, optimizer_G], [scheduler_D, scheduler_G]
 
     @pl.data_loader
