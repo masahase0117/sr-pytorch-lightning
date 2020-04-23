@@ -15,6 +15,8 @@ torchvision = "*"
 pytorch-lightning = "*"
 kornia = "*"
 tqdm = "*"
+test-tube = "*"
+pillow = "*"
 
 [requires]
 python_version = "3.7"
