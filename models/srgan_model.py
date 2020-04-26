@@ -62,11 +62,11 @@ class SRGANModel(pl.LightningModule):
     def forward(self, input_value):
         return self.net_G(input_value)
 
-    def training_step(self, batch, batch_nb, optimizer_i):
+    def training_step(self, batch, batch_idx, optimizer_idx):
         img_lr = batch["lr"]  # \in [0, 1]
         img_hr = batch["hr"]  # \in [0, 1]
 
-        if optimizer_i == 0:  # train discriminator
+        if optimizer_idx == 0:  # train discriminator
             self.img_sr = self.forward(img_lr)  # \in [0, 1]
 
             # for real image
@@ -81,7 +81,7 @@ class SRGANModel(pl.LightningModule):
 
             return {"loss": d_loss, "prog": {"tng/d_loss": d_loss}}
 
-        elif optimizer_i == 1:  # train generator
+        elif optimizer_idx == 1:  # train generator
             # content loss
             mse_loss = self.criterion_MSE(
                 self.img_sr * 2 - 1, img_hr * 2 - 1  # \in [-1, 1]
@@ -124,7 +124,7 @@ class SRGANModel(pl.LightningModule):
                 },
             }
 
-    def validation_step(self, batch, batch_nb):
+    def validation_step(self, batch, batch_idx):
         with torch.no_grad():
             img_lr = batch["lr"]
             img_hr = batch["hr"]
@@ -193,3 +193,17 @@ class SRGANModel(pl.LightningModule):
             out_dict[name] = get_loader(name)
 
         return out_dict
+
+    def test_step(self, batch, batch_idx):
+        with torch.no_grad():
+            img_lr = batch["lr"]
+            img_hr = batch["hr"]
+            img_sr = self.forward(img_lr)
+
+            img_hr_ = rgb_to_grayscale(img_hr)
+            img_sr_ = rgb_to_grayscale(img_sr)
+
+            psnr = self.criterion_PSNR(img_sr_, img_hr_)
+            ssim = 1 - self.criterion_SSIM(img_sr_, img_hr_)  # invert
+
+        return {"psnr": psnr, "ssim": ssim}
