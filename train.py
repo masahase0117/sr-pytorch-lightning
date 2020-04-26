@@ -49,7 +49,9 @@ def main():
         add_log_row_interval=50,
         check_val_every_n_epoch=10,
         checkpoint_callback=checkpoint_callback,
-        gpus=[int(i) for i in opt.gpus.split(",")],
+        gpus=[int(i) for i in opt.gpus.split(",")]
+        if opt.gpus != "-1"
+        else None,
     )
 
     # start training!
