@@ -96,7 +96,7 @@ class SRGANModel(pl.LightningModule):
             # combined generator loss
             g_loss = content_loss + 1e-3 * adv_loss + 2e-8 * tv_loss
 
-            if self.global_step % self.trainer.add_log_row_interval == 0:
+            if self.global_step % self.trainer.row_log_interval == 0:
                 nrow = ceil(sqrt(self.batch_size))
                 self.experiment.add_image(
                     tag="train/lr_img",

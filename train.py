@@ -46,7 +46,7 @@ def main():
     trainer = Trainer(
         experiment=exp,
         max_nb_epochs=4000,
-        add_log_row_interval=50,
+        row_log_interval=50,
         check_val_every_n_epoch=10,
         checkpoint_callback=checkpoint_callback,
         gpus=[int(i) for i in opt.gpus.split(",")]
