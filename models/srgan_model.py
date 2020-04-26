@@ -159,7 +159,7 @@ class SRGANModel(pl.LightningModule):
         return [optimizer_d, optimizer_g], [scheduler_d, scheduler_g]
 
     @pl.data_loader
-    def tng_dataloader(self):
+    def train_dataloader(self):
         dataset = DatasetFromFolder(
             data_dir="./data/DIV2K/train",
             scale_factor=self.scale_factor,

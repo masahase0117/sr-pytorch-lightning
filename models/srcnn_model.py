@@ -36,7 +36,7 @@ class SRCNNModel(pl.LightningModule):
         return [optim.Adam(self.parameters(), lr=1e-4)]
 
     @pl.data_loader
-    def tng_dataloader(self):
+    def train_dataloader(self):
         dataset = DatasetFromFolder(
             data_dir=self.dataroot / "train",
             scale_factor=4,
