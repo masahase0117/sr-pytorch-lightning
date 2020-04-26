@@ -172,7 +172,7 @@ class SRGANModel(pl.LightningModule):
     @pl.data_loader
     def val_dataloader(self):
         dataset = DatasetFromFolder(
-            data_dir="./data/DIV2K/val",
+            data_dir="./data/DIV2K/valid",
             scale_factor=self.scale_factor,
             mode="eval",
         )
@@ -182,7 +182,7 @@ class SRGANModel(pl.LightningModule):
     def test_dataloader(self):
         def get_loader(name_):
             dataset = DatasetFromFolder(
-                data_dir=f"./data/{name_}/HR",
+                data_dir=f"./data/{name_}",
                 scale_factor=self.scale_factor,
                 mode="eval",
             )
