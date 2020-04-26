@@ -17,8 +17,8 @@ class SRCNNModel(pl.LightningModule):
         self.net = SRCNN()
         self.criterion = nn.MSELoss()
 
-    def forward(self, input):
-        return self.net(input)
+    def forward(self, input_value):
+        return self.net(input_value)
 
     def training_step(self, batch, batch_nb):
         img_lr = batch["lr"]

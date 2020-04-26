@@ -3,7 +3,7 @@ from collections import namedtuple
 import kornia.color as kc
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as f
 import torchvision.models.vgg as vgg
 
 
@@ -51,6 +51,8 @@ class GANLoss(nn.Module):
                 loss = -prediction.mean()
             else:
                 loss = prediction.mean()
+        else:
+            raise RuntimeError(self.gan_mode)
         return loss
 
 
@@ -123,7 +125,7 @@ class VGGLoss(nn.Module):
         norm_y = self.__normalize(y)
         feat_x = getattr(self.__vgg_net(norm_x), self.__layer)
         feat_y = getattr(self.__vgg_net(norm_y), self.__layer)
-        out = F.mse_loss(feat_x, feat_y) * self.rescale
+        out = f.mse_loss(feat_x, feat_y) * self.rescale
         return out
 
 
@@ -153,8 +155,8 @@ class VGG16(nn.Module):
             for param in self.parameters():
                 param.requires_grad = False
 
-    def forward(self, X):
-        h = self.slice1(X)
+    def forward(self, x):
+        h = self.slice1(x)
         h_relu1_2 = h
         h = self.slice2(h)
         h_relu2_2 = h
@@ -200,8 +202,8 @@ class VGG19(nn.Module):
             for param in self.parameters():
                 param.requires_grad = False
 
-    def forward(self, X):
-        h = self.slice1(X)
+    def forward(self, x):
+        h = self.slice1(x)
         h_relu1_2 = h
         h = self.slice2(h)
         h_relu2_2 = h
@@ -265,6 +267,6 @@ class PSNR(nn.Module):
         if predictions.shape[1] == 3:
             predictions = kc.rgb_to_grayscale(predictions)
             targets = kc.rgb_to_grayscale(targets)
-        mse = F.mse_loss(predictions, targets)
+        mse = f.mse_loss(predictions, targets)
         psnr = 10 * torch.log10(self.max_val ** 2 / mse)
         return psnr

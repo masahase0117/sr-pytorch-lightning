@@ -4,7 +4,7 @@ from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
 from torchvision import transforms
-from torchvision.transforms import functional as TF
+from torchvision.transforms import functional as tf
 
 IMG_EXTENSIONS = [
     ".jpg",
@@ -28,7 +28,7 @@ def pad(img, scale):
     width, height = img.size
     pad_h = width % scale
     pad_v = height % scale
-    img = TF.pad(
+    img = tf.pad(
         img, (0, 0, scale - pad_h, scale - pad_v), padding_mode="reflect"
     )
     return img
@@ -61,10 +61,10 @@ class DatasetFromFolder(Dataset):
                     ),
                     transforms.RandomApply(
                         [
-                            functools.partial(TF.rotate, angle=0),
-                            functools.partial(TF.rotate, angle=90),
-                            functools.partial(TF.rotate, angle=180),
-                            functools.partial(TF.rotate, angle=270),
+                            functools.partial(tf.rotate, angle=0),
+                            functools.partial(tf.rotate, angle=90),
+                            functools.partial(tf.rotate, angle=180),
+                            functools.partial(tf.rotate, angle=270),
                         ]
                     ),
                     transforms.RandomHorizontalFlip(),
@@ -91,14 +91,14 @@ class DatasetFromFolder(Dataset):
         down_size = [
             length // self.scale_factor for length in img_hr.size[::-1]
         ]
-        img_lr = TF.resize(img_hr, down_size, interpolation=Image.BICUBIC)
+        img_lr = tf.resize(img_hr, down_size, interpolation=Image.BICUBIC)
         if self.preupsample:
-            img_lr = TF.resize(
+            img_lr = tf.resize(
                 img_lr, img_hr.size[::-1], interpolation=Image.BICUBIC
             )
         return {
-            "lr": TF.to_tensor(img_lr),
-            "hr": TF.to_tensor(img_hr),
+            "lr": tf.to_tensor(img_lr),
+            "hr": tf.to_tensor(img_hr),
             "path": filename.stem,
         }
 

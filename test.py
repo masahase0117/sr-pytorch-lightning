@@ -17,12 +17,14 @@ def main():
 
     # load model class
     if opt.model == "srcnn":
-        Model = models.SRCNNModel
+        model = models.SRCNNModel
     elif opt.model == "srgan":
-        Model = models.SRGANModel
+        model = models.SRGANModel
+    else:
+        raise RuntimeError(opt.model)
 
     # load model state from ckpt file
-    model = Model.load_from_metrics(
+    model = model.load_from_metrics(
         weights_path=opt.ckpt,
         tags_csv=Path(opt.ckpt).parent.parent / "meta_tags.csv",
         map_location=None,
@@ -34,8 +36,8 @@ def main():
     save_dir = save_dir.with_name(Path(opt.ckpt).stem.replace("_ckpt_", ""))
     save_dir.mkdir(exist_ok=True)
 
-    criterion_PSNR = models.losses.PSNR()
-    criterion_SSIM = SSIM(window_size=11, reduction="mean")
+    criterion_psnr = models.losses.PSNR()
+    criterion_ssim = SSIM(window_size=11, reduction="mean")
 
     for dataset, dataloader in model.test_dataloader.items():
         psnr_mean = 0
@@ -51,8 +53,8 @@ def main():
             img_hr_ = rgb_to_grayscale(img_hr)
             img_sr_ = rgb_to_grayscale(img_sr)
 
-            psnr = criterion_PSNR(img_hr_, img_sr_).item()
-            ssim = 1 - criterion_SSIM(img_hr_, img_sr_).item()
+            psnr = criterion_psnr(img_hr_, img_sr_).item()
+            ssim = 1 - criterion_ssim(img_hr_, img_sr_).item()
             psnr_mean += psnr
             ssim_mean += ssim
 

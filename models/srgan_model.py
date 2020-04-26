@@ -59,8 +59,8 @@ class SRGANModel(pl.LightningModule):
         self.criterion_PSNR = PSNR()
         self.criterion_SSIM = SSIM(window_size=11, reduction="mean")
 
-    def forward(self, input):
-        return self.net_G(input)
+    def forward(self, input_value):
+        return self.net_G(input_value)
 
     def training_step(self, batch, batch_nb, optimizer_i):
         img_lr = batch["lr"]  # \in [0, 1]
@@ -152,11 +152,11 @@ class SRGANModel(pl.LightningModule):
         }
 
     def configure_optimizers(self):
-        optimizer_G = optim.Adam(self.net_G.parameters(), lr=1e-4)
-        optimizer_D = optim.Adam(self.net_D.parameters(), lr=1e-4)
-        scheduler_G = StepLR(optimizer_G, step_size=100000, gamma=0.1)
-        scheduler_D = StepLR(optimizer_D, step_size=100000, gamma=0.1)
-        return [optimizer_D, optimizer_G], [scheduler_D, scheduler_G]
+        optimizer_g = optim.Adam(self.net_G.parameters(), lr=1e-4)
+        optimizer_d = optim.Adam(self.net_D.parameters(), lr=1e-4)
+        scheduler_g = StepLR(optimizer_g, step_size=100000, gamma=0.1)
+        scheduler_d = StepLR(optimizer_d, step_size=100000, gamma=0.1)
+        return [optimizer_d, optimizer_g], [scheduler_d, scheduler_g]
 
     @pl.data_loader
     def tng_dataloader(self):
@@ -180,9 +180,9 @@ class SRGANModel(pl.LightningModule):
 
     @pl.data_loader
     def test_dataloader(self):
-        def get_loader(name):
+        def get_loader(name_):
             dataset = DatasetFromFolder(
-                data_dir=f"./data/{name}/HR",
+                data_dir=f"./data/{name_}/HR",
                 scale_factor=self.scale_factor,
                 mode="eval",
             )

@@ -21,19 +21,21 @@ def main():
 
     # load model class
     if opt.model == "srcnn":
-        Model = models.SRCNNModel
+        model = models.SRCNNModel
     elif opt.model == "srgan":
-        Model = models.SRGANModel
+        model = models.SRGANModel
+    else:
+        raise RuntimeError(opt.model)
 
     # add model specific arguments to original parser
-    parser = Model.add_model_specific_args(parser)
+    parser = model.add_model_specific_args(parser)
     opt = parser.parse_args()
 
     # instantiate experiment
     exp = Experiment(save_dir=f"./logs/{opt.model}")
     exp.argparse(opt)
 
-    model = Model(opt)
+    model = model(opt)
 
     # define callbacks
     checkpoint_callback = ModelCheckpoint(
