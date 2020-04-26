@@ -98,17 +98,17 @@ class SRGANModel(pl.LightningModule):
 
             if self.global_step % self.trainer.row_log_interval == 0:
                 nrow = ceil(sqrt(self.batch_size))
-                self.experiment.add_image(
+                self.logger.experiment.add_image(
                     tag="train/lr_img",
                     img_tensor=make_grid(img_lr, nrow=nrow, padding=0),
                     global_step=self.global_step,
                 )
-                self.experiment.add_image(
+                self.logger.experiment.add_image(
                     tag="train/hr_img",
                     img_tensor=make_grid(img_hr, nrow=nrow, padding=0),
                     global_step=self.global_step,
                 )
-                self.experiment.add_image(
+                self.logger.experiment.add_image(
                     tag="train/sr_img",
                     img_tensor=make_grid(self.img_sr, nrow=nrow, padding=0),
                     global_step=self.global_step,

@@ -3,7 +3,7 @@ import warnings
 
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.trainer import Trainer
-from test_tube import Experiment
+from pytorch_lightning.loggers import test_tube
 
 import models
 
@@ -32,19 +32,19 @@ def main():
     opt = parser.parse_args()
 
     # instantiate experiment
-    exp = Experiment(save_dir=f"./logs/{opt.model}")
-    exp.argparse(opt)
+    exp = test_tube.TestTubeLogger(save_dir=f"./logs/{opt.model}")
+    exp.experiment.argparse(opt)
 
     model = model(opt)
 
     # define callbacks
     checkpoint_callback = ModelCheckpoint(
-        filepath=exp.get_media_path(exp.name, exp.version),
+        filepath=exp.experiment.get_media_path(exp.name, exp.version),
     )
 
     # instantiate trainer
     trainer = Trainer(
-        experiment=exp,
+        logger=exp,
         max_nb_epochs=4000,
         row_log_interval=50,
         check_val_every_n_epoch=10,
